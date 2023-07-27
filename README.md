@@ -16,6 +16,3 @@ Instructions
 
 The database used for the entire workshop is available in the stores folder of the repository and is called data.Rdata.
 
-To replicate the work in Rmarkdown it is not necessary to run the lines of code corresponding to the Import_data and Transforming_data chunks, since they process the information directly from the pages and perform the data transformation; instead, the Import_DB chunk can be used to import the transformed database.
-
-Additionally, it is important to note that point 5 will take time as it must iterate the 2 models for all observations. However, to facilitate this, the base available in stores should be loaded.
