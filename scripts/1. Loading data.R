@@ -19,7 +19,7 @@ path_sript <- rstudioapi::getActiveDocumentContext()$path
 path_folder <- dirname(path_sript)
 setwd(path_folder)
 
-## llamado librerías de la sesión
+## Librerias
 require(pacman)
 
 # Loading data -------------------------------------------------------------
@@ -34,3 +34,5 @@ saveRDS(train_personas, "../stores/train_personas.rds")
 saveRDS(train_hogares, "../stores/train_hogares.rds")
 saveRDS(test_personas, "../stores/test_personas.rds")
 saveRDS(test_hogares, "../stores/test_hogares.rds")
+
+saveRDS(sample_submission, "../stores/sample_submission.rds")
