@@ -22,69 +22,15 @@ setwd(path_folder)
 ## llamado librerías de la sesión
 require(pacman)
 
-p_load(tidyverse,rio,
-       sf,
-       leaflet,
-       tmaptools,
-       osmdata,
-       nngeo,
-       magrittr,
-       rgeos,
-       rio,
-       rstudioapi)
+# Loading data -------------------------------------------------------------
+train_personas <- read.csv("/Users/irina/Downloads/uniandes-bdml-202313-ps31/train_personas.csv")
+train_hogares <- read.csv("/Users/irina/Downloads/uniandes-bdml-202313-ps31/train_hogares.csv")
+test_personas <- read.csv("/Users/irina/Downloads/uniandes-bdml-202313-ps31/test_personas.csv")
+test_hogares <- read.csv("/Users/irina/Downloads/uniandes-bdml-202313-ps31/test_hogares.csv")
 
+sample_submission <- read.csv("/Users/irina/Downloads/uniandes-bdml-202313-ps31/sample_submission.csv")
 
-# Import data -------------------------------------------------------------
-
-## Personas
-### Train
-train_personas <- read.csv("../stores/train_personas.csv")
-
-### Test
-test_personas <- read.csv("../stores/test_personas.csv")
-
-## Hogares
-### Train
-train_hogares <- read.csv("../stores/train_hogares.csv")
-
-### Test
-test_hogares <- read.csv("../stores/test_hogares.csv")
-
-
-# View 1 data -------------------------------------------------------------
-## Personas ####
-## Train
-names(train_personas)
-glimpse(train_personas)
-summary(train_personas)
-
-## Test
-names(test_personas)
-glimpse(test_personas)
-summary(test_personas)
-
-## Hogares ####
-### Train
-names(train_hogares)
-glimpse(train_hogares)
-summary(train_hogares)
-
-### Test
-names(test_hogares)
-glimpse(test_hogares)
-summary(test_hogares)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+saveRDS(train_personas, "../stores/train_personas.rds")
+saveRDS(train_hogares, "../stores/train_hogares.rds")
+saveRDS(test_personas, "../stores/test_personas.rds")
+saveRDS(test_hogares, "../stores/test_hogares.rds")
