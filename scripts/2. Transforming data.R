@@ -49,6 +49,16 @@ glimpse(train_hogares)
 names(test_hogares)
 glimpse(test_hogares)
 
+common_var_train <- intersect(names(train_personas), names(train_hogares))
+common_var_train
+
+# Creating the variable income
+sum_income <- train_personas %>% group_by(id) %>% summarize(tot_income_h = sum(Ingtot, na.rm = TRUE))
+summary(sum_income)
+
+# Joining the new variable tot_income_h to train_hogares
+train_hogares <- left_join(train_hogares, sum_income)
+
 # Leave both db with the same variables for train and test
 diff_personas <- setdiff(names(train_personas), names(test_personas))
 length(diff_personas)
