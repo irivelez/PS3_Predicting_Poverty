@@ -94,7 +94,7 @@ saveRDS(i_train_hogares, "../stores/i_train_hogares.rds")
 # Check if any test IDs are in the train dataset
 test_id <- unique(test_hogares$id)
 test_id_in_train <- test_id %in% train_hogares$id
-test_id[test_id_in_train]. ## There is no ID test on train
+test_id[test_id_in_train] ## There is no ID test on train
 
 ## No data available for dependent variables such as income(ingtot) or poor (pobre)
 ## in the test datasets
@@ -152,7 +152,7 @@ n_train_personas$mujer <- n_train_personas$mujer  - 1
 names(n_train_personas)[names(n_train_personas) == "P6040"] <- "Edad"
 
 names(n_train_personas)[names(n_train_personas) == "P6210"] <- "Nivel_educ"
-n_train_personas$Nivel_educ <- factor(n_train_personas$Nivel_educ
+n_train_personas$Nivel_educ <- factor(n_train_personas$Nivel_educ)
                                       
                      
                                       
@@ -165,17 +165,17 @@ na_count_p <- colSums(is.na(n_train_personas))
 na_count_p <- sort(na_count_p, decreasing = TRUE)
 proportion_na_p <- na_count_p/nrow(n_train_personas)
 
-diff_train <- setdiff(names(n_train_personas), names(n_train_hogares))
-diff_train
+##diff_train <- setdiff(names(n_train_personas), names(n_train_hogares))
+##diff_train
 
-na_count_p <- colSums(is.na(n_train_personas[diff_train]))
+##na_count_p <- colSums(is.na(n_train_personas[diff_train]))
 na_count_p <- sort(na_count_p, decreasing = TRUE)
 proportion_na_p <- na_count_p/nrow(n_train_personas)
 
-common_var_train <- intersect(names(n_train_personas), names(n_train_hogares))
-common_var_train
+##common_var_train <- intersect(names(n_train_personas), names(n_train_hogares))
+##common_var_train
 
-colnames(n_train_hogares)
+#colnames(n_train_hogares)
 colnames(n_train_personas)
 
 
