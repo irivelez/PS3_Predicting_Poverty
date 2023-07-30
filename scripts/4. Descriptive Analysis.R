@@ -104,7 +104,8 @@ datos_pob <- data.frame(
 # Calculamos el porcentaje de cada categoría
 datos_pob$Porcentaje <- datos_pob$Cantidad / sum(datos_pob$Cantidad) * 100
 
-# Creamos el gráfico de torta usando ggplot2
+# Creamos el gráfico de torta usando 
+
 grafico_torta <- ggplot(datos_pob, aes(x = "", y = Porcentaje, fill = Categoría)) +
   geom_bar(stat = "identity", width = 1) +
   theme_minimal() +
@@ -116,9 +117,9 @@ grafico_torta <- ggplot(datos_pob, aes(x = "", y = Porcentaje, fill = Categoría
   scale_fill_manual(values = c("lightblue", "lightgreen"), 
                     labels = c("No Pobreza", "Pobreza"), 
                     name = "Categoría") +
-  theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
-        plot.subtitle = element_text(hjust = 0.5, size = 14),
-        plot.caption = element_text(hjust = 0, size = 8)) +
+  theme(plot.title = element_text(hjust = 0.5, size = 12, face = "bold"),
+        plot.subtitle = element_text(hjust = 0.5, size = 10),
+        plot.caption = element_text(hjust = 0, size = 6)) +
   geom_text(aes(label = paste0(round(Porcentaje, 1), "%")), position = position_stack(vjust = 0.5))
 
 # Mostramos el gráfico
