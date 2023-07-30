@@ -20,6 +20,9 @@ path_folder <- dirname(path_sript)
 setwd(path_folder)
 
 # Libraries -----
+if(!require(pacman)) install.packages("pacman")
+require(pacman)
+
 p_load(tidyverse,rio,
        sf,
        leaflet,
@@ -36,19 +39,24 @@ p_load(tidyverse,rio,
 # Importing databases
 
 test_hogares <- readRDS("../stores/test_hogares.rds")
+test_hogares$Dominio <- factor(test_hogares$Dominio)
+class(test_hogares$Dominio)
+
+
 p_train_hogares <- readRDS("../stores/p_train_hogares.rds")
+p_train_hogares$Dominio <- factor(p_train_hogares$Dominio)
+class(p_train_hogares$Dominio)
+
 
 ## Predicting Income
-
+p_load(caret)
 block_folds <- trainControl(method = "CV", number = 5)
 
 
 
 set.seed(9873)
-EN <- train(tot_income_h ~ surface_covered_new + rooms + bedrooms + bathrooms +
-              parqueaderoT + ascensorT + bañoprivado + balcon+vista + remodelado +
-              Es_apartamento + distancia_parque + area_parque + distancia_sport_centre +
-              distancia_swimming_pool,
+EN <- train(tot_income_h ~ Dominio+Num_cuartos+P5010+Tipo_vivienda+Nper+Npersug+Li+Lp+pobre+
+              Num_personas_cuarto+edad_prom_h+horastrab_prom_h+max_educ_h+max_health_h,
             data=p_train_hogares,
             method = 'glmnet', 
             trControl = block_folds,
@@ -57,7 +65,6 @@ EN <- train(tot_income_h ~ surface_covered_new + rooms + bedrooms + bathrooms +
 )
 
 plot(EN)
-
 
 
 ## Predecir datos
