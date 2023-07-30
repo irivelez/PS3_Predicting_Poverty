@@ -38,12 +38,12 @@ i_train_hogares <- readRDS("../stores/i_train_hogares.rds")
 
 
 # Clasificación de 1 y 0 con income predicho 1
-i_test_hogares$pobre_p_1 <- if(Li)
+i_test_hogares$pobre_p_1 <- ifelse(i_test_hogares$tot_income_h >= i_test_hogares$Lp, 0, 1)
 
 
+# Guardar base para subir predicción
 
 
-# Clasificación de 1 y 0 con income predicho 2
 
 
 
