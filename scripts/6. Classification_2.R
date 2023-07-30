@@ -32,16 +32,53 @@ p_load(tidyverse,
        caret,
        dplyr)
 
-# Importing from Github #AJUSTAR 
-i_test_hogares <- readRDS("../stores/i_test_hogares.rds")
-i_train_hogares <- readRDS("../stores/i_train_hogares.rds")
+# Importing from Github
 
 
-# Clasificación de 1 y 0 con income predicho 1
-i_test_hogares$pobre_p_1 <- ifelse(i_test_hogares$tot_income_h >= i_test_hogares$Lp, 0, 1)
+
+# Bases
+ien_test_hogares <- readRDS("../stores/ien_test_hogares.rds")
+ilasso_test_hogares <- readRDS("../stores/ilasso_test_hogares.rds")
+iridge_test_hogares <- readRDS("../stores/iridge_test_hogares.rds")
+
+i_train_hogares <- readRDS("../stores/i_test_hogares.rds")
+
+
+# Clasificación de 1 y 0 con income predicho EN
+ien_test_hogares$pobre_p_1 <- ifelse(ien_test_hogares$tot_income_h >= ien_test_hogares$Lp, 0, 1)
+
+# Clasificación de 1 y 0 con income predicho Lasso
+ilasso_test_hogares$pobre_p_1 <- ifelse(ilasso_test_hogares$tot_income_h >= ilasso_test_hogares$Lp, 0, 1)
+
+# Clasificación de 1 y 0 con income predicho Ridge
+iridge_test_hogares$pobre_p_1 <- ifelse(iridge_test_hogares$tot_income_h >= iridge_test_hogares$Lp, 0, 1)
 
 
 # Guardar base para subir predicción
+p_load(dplyr)
+
+# EN
+predicciones_EN_1_income <- ien_test_hogares[,c(1,19)]
+predicciones_EN_1_income <- predicciones_EN_1_income %>% rename(pobre = pobre_p_1)
+
+write.csv(predicciones_EN_1_income, "../outputs/predicciones_EN_1_income.csv", row.names = FALSE)
+
+
+# Lasso
+predicciones_Lasso_1_income <- ilasso_test_hogares[,c(1,19)]
+predicciones_Lasso_1_income <- predicciones_Lasso_1_income %>% rename(pobre = pobre_p_1)
+
+write.csv(predicciones_Lasso_1_income, "../outputs/predicciones_Lasso_1_income.csv", row.names = FALSE)
+
+
+# Ridge
+predicciones_Ridge_1_income <- iridge_test_hogares[,c(1,19)]
+predicciones_Ridge_1_income <- predicciones_Ridge_1_income %>% rename(pobre = pobre_p_1)
+
+write.csv(predicciones_Ridge_1_income, "../outputs/predicciones_Ridge_1_income.csv", row.names = FALSE)
+
+
+
 
 
 
