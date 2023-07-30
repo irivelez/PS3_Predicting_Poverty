@@ -47,15 +47,16 @@ p_train_hogares <- readRDS("../stores/p_train_hogares.rds")
 p_train_hogares$Dominio <- factor(p_train_hogares$Dominio)
 class(p_train_hogares$Dominio)
 
+# Creac log_income
+p_train_hogares$log_income <- log(p_train_hogares$tot_income_h)
+
 
 ## Predicting Income
 p_load(caret)
 block_folds <- trainControl(method = "CV", number = 5)
 
-
-
 set.seed(9873)
-EN <- train(tot_income_h ~ Dominio+Num_cuartos+P5010+Tipo_vivienda+Nper+Npersug+Li+Lp+pobre+
+EN <- train(log_income ~ Dominio+Num_cuartos+P5010+Tipo_vivienda+Nper+Npersug+Li+Lp+pobre+
               Num_personas_cuarto+edad_prom_h+horastrab_prom_h+max_educ_h+max_health_h,
             data=p_train_hogares,
             method = 'glmnet', 
@@ -70,3 +71,12 @@ plot(EN)
 ## Predecir datos
 # Verificar si hay que crear una variable con el mismo nombre en el test
 y_hat_outsample_EN <- predict(EN,test_hogares)
+
+y_hat_outsample_EN_cop <- exp(y_hat_outsample_EN)
+
+
+
+summary(y_hat_outsample_EN)
+summary(p_train_hogares$tot_income_h)
+
+
