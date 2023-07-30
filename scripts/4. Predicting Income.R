@@ -48,7 +48,8 @@ p_train_hogares$Dominio <- factor(p_train_hogares$Dominio)
 class(p_train_hogares$Dominio)
 
 # Creac log_income
-p_train_hogares$log_income <- log(p_train_hogares$tot_income_h)
+p_train_hogares$log_income <- log(p_train_hogares$tot_income_h+1)
+
 
 
 ## Predicting Income
@@ -70,13 +71,20 @@ plot(EN)
 
 ## Predecir datos
 # Verificar si hay que crear una variable con el mismo nombre en el test
-y_hat_outsample_EN <- predict(EN,test_hogares)
+y_hat_outsample_EN_log <- predict(EN,test_hogares)
+y_hat_outsample_EN_cop <- exp(y_hat_outsample_EN_log)
 
-y_hat_outsample_EN_cop <- exp(y_hat_outsample_EN)
+summary(y_hat_outsample_EN_cop)
+
+predict_1 <- data.frame(id = test_hogares$id, tot_income_h = y_hat_outsample_EN_cop)
+
+# Bases de datos
+test_hogares <- left_join(test_hogares, predict_1) 
+p_train_hogares <- subset(p_train_hogares,select = -log_income)
 
 
 
-summary(y_hat_outsample_EN)
-summary(p_train_hogares$tot_income_h)
+
+
 
 
