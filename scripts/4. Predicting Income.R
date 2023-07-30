@@ -79,10 +79,12 @@ summary(y_hat_outsample_EN_cop)
 predict_1 <- data.frame(id = test_hogares$id, tot_income_h = y_hat_outsample_EN_cop)
 
 # Bases de datos
-test_hogares <- left_join(test_hogares, predict_1) 
-p_train_hogares <- subset(p_train_hogares,select = -log_income)
+i_test_hogares <- left_join(test_hogares, predict_1) 
+i_train_hogares <- subset(p_train_hogares,select = -log_income)
 
-
+# Guardar bases
+saveRDS(i_test_hogares, "../stores/i_test_hogares.rds") 
+saveRDS(i_train_hogares, "../stores/i_train_hogares.rds") 
 
 
 
