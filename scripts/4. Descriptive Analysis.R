@@ -49,6 +49,35 @@ i_train_hogares$pobre <- factor(i_train_hogares$pobre)
 ggpairs(i_train_hogares, columns = 10:17, ggplot2::aes(colour = pobre)) +
   theme_bw()
 
+variables_interes <- i_train_hogares[, c(17,3,8,9,12,13,14)]
+
+# Calculamos la matriz de correlación
+matriz_cor <- cor(variables_interes)
+
+# Creamos un vector con las combinaciones de variables para el eje x e y del mapa de calor
+nombres_variables <- colnames(matriz_cor)
+combinaciones <- expand.grid(nombres_variables, nombres_variables)
+combinaciones <- combinaciones[combinaciones$Var1 != combinaciones$Var2,]
+
+# Creamos un data.frame con las combinaciones y los valores de correlación
+datos_cor <- data.frame(
+  Variable1 = combinaciones$Var1,
+  Variable2 = combinaciones$Var2,
+  Correlacion = matriz_cor[lower.tri(matriz_cor)]
+)
+
+# Creamos el mapa de calor (heatmap) para visualizar las correlaciones con etiquetas
+graf_corr <- ggplot(data = datos_cor, aes(x = Variable1, y = Variable2)) +
+  geom_tile(aes(fill = Correlacion)) +
+  geom_text(aes(label = round(Correlacion, 2)), vjust = 1) +  # Etiquetas que muestran los valores de correlación
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white", midpoint = 0) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "Mapa de Calor de Correlaciones entre Variables",
+       x = "Variable",
+       y = "Variable")
+print(graf_corr)
+
 
 ## tot_income_h ----
 summary(i_train_hogares$tot_income_h) %>%
