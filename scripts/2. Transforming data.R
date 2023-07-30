@@ -52,7 +52,7 @@ glimpse(test_hogares)
 common_var_train <- intersect(names(train_personas), names(train_hogares))
 common_var_train
 
-# Creating Poor variable ----- 
+# Creating variables ----- 
 
 # Check if any test IDs are in others dataset
 test_id <- unique(test_hogares$id)
@@ -77,6 +77,11 @@ table(train_hogares$Pobre_h, train_hogares$Pobre)
 
 train_hogares <- train_hogares %>% mutate(Pobre_h2 = ifelse(Ingtotugarr < Lp*Npersug, 1, 0))
 table(train_hogares$Pobre, train_hogares$Pobre_h2)
+
+## Income ####
+sum_income <- train_personas %>% group_by(id) %>% summarize(tot_income_h = sum(Ingtot, na.rm = TRUE))
+summary(sum_income)
+
 
 # Leave both db with the same variables for train and test -----
 # Personas
@@ -161,7 +166,6 @@ names(n_train_personas)[names(n_train_personas) == "P6210"] <- "Nivel_educ"
 n_train_personas$Nivel_educ <- factor(n_train_personas$Nivel_educ)
 
 saveRDS(n_train_personas, "../stores/n_train_personas.rds")
-
 
 
 # Adding variables from personas to hogares db ----
@@ -294,10 +298,7 @@ test_hogares <- left_join(test_hogares, sum_health_test)
 colnames(test_hogares)
 table(test_hogares$max_health_h)
 
-# Creating income variable -----
-## Income ####
-sum_income <- train_personas %>% group_by(id) %>% summarize(tot_income_h = sum(Ingtot, na.rm = TRUE))
-summary(sum_income)
+# Variable income -----
 
 # Joining the new variable tot_income_h to train_hogares
 p_train_hogares <- left_join(p_train_hogares, sum_income)
