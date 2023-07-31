@@ -640,7 +640,6 @@ logit3 <- train(
 logit3
 
 ## Predicción modelo Logit ####
-
 y_hat_out_logit <- predict(logit3, newdata = test_hogares, type = "raw")
 resultado_logit <- data.frame(id = test_hogares$id, pobre = y_hat_out_logit)
 
@@ -648,9 +647,8 @@ resultado_logit$pobre <- ifelse(resultado_logit$pobre == "No", 0, 1)
 write.csv(resultado_logit, "../outputs/resultado_logit.csv", row.names = FALSE)
 
 
-### LASSO
+# LASSO ----
 #Prueba tomando como métrica la Sensibilidad
-
 
 #Lambdas para Lasso
 lambdas <- 10^seq(-4, 0.01, length = 200)
@@ -670,6 +668,13 @@ lasso_sens3 <- train(
 
 lasso_sens3
 #lambda = 0.01189947
+
+## Predicción modelo Lasso con sensibilidad ####
+y_hat_out_lasso3 <- predict(lasso_sens3, newdata = test_hogares, type = "raw")
+resultado_lasso3 <- data.frame(id = test_hogares$id, pobre = y_hat_out_lasso3)
+
+resultado_lasso3$pobre <- ifelse(resultado_lasso3$pobre == "No", 0, 1)
+write.csv(resultado_lasso3, "../outputs/resultado_lasso3.csv", row.names = FALSE)
 
 ### LASSO
 #Prueba tomando como métrica el ROC
@@ -741,11 +746,10 @@ with(Eval_Resultados,table(Pobre,hat_def_rf_Thresh))
 #No 12819   306
 
 ############################################################
-##########      Logit Lasso Up-sampling
+#                 Lasso Up-sampling                     ####
 ############################################################
 
-
-#Up-sampling
+# Up-sampling
 set.seed(10101)
 lasso_upsample3 <- upSample(x = p_train_hogares_mini,
                             y = p_train_hogares_mini$Pobre_dummy,
@@ -772,9 +776,16 @@ lasso_upsample3 <- train(
 lasso_upsample3
 #0.01571926
 
+### Predicciones modelo lasso down-sample ----
+y_hat_out_lassoup <- predict(lasso_upsample3, newdata = test_hogares, type = "raw")
+resultado_lassoup <- data.frame(id = test_hogares$id, pobre = y_hat_out_lassoup)
+
+resultado_lassoup$pobre <- ifelse(resultado_lassoup$pobre == "No", 0, 1)
+write.csv(resultado_lassoup, "../outputs/resultado_lassoup.csv", row.names = FALSE)
+
 
 ############################################################
-#               Lasso Down-sampling.                ########
+#               Lasso Down-sampling                ########
 ############################################################
 
 set.seed(10101)
