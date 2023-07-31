@@ -33,9 +33,12 @@ p_load(tidyverse,
        caret)
 
 
-# Importing from Github
+# Importing DBs from Github ----
 test_hogares <- readRDS("../stores/test_hogares.rds")
 p_train_hogares <- readRDS("../stores/p_train_hogares.rds")
+
+ilasso_test_hogares <- readRDS("../stores/ilasso_test_hogares.rds")
+i_train_hogares <- readRDS("../stores/i_test_hogares.rds")
 
 #############################################################################
 ###########################     Clasificación     ###########################
@@ -111,7 +114,7 @@ ctrl_def_modg <- trainControl(method = "cv",
 #Número de cuartos (Num_cuartos)
 
 
-###LOGIT
+###LOGIT -----
 
 set.seed(10101)
 logit1 <- train(
@@ -125,7 +128,7 @@ logit1 <- train(
 logit1
 
 
-### LASSO
+### LASSO -----
 #Prueba tomando como métrica la Sensibilidad
 
 
@@ -621,7 +624,7 @@ with(testResults,table(Pobre,elasticnet2))
 #Horas trabajadas: (horastrab_prom_h)
 
 
-###LOGIT
+# LOGIT -----
 
 set.seed(10101)
 logit3 <- train(
@@ -635,6 +638,14 @@ logit3 <- train(
   preProcess = c("center", "scale"))
 
 logit3
+
+## Predicción modelo Logit ####
+
+y_hat_out_logit <- predict(logit3, newdata = test_hogares, type = "raw")
+resultado_logit <- data.frame(id = test_hogares$id, pobre = y_hat_out_logit)
+
+resultado_logit$pobre <- ifelse(resultado_logit$pobre == "No", 0, 1)
+write.csv(resultado_logit, "../outputs/resultado_logit.csv", row.names = FALSE)
 
 
 ### LASSO
@@ -763,9 +774,8 @@ lasso_upsample3
 
 
 ############################################################
-##########      Logit Lasso Down-sampling
+#               Lasso Down-sampling.                ########
 ############################################################
-
 
 set.seed(10101)
 lasso_downsample3 <- downSample(x = p_train_hogares_mini,
@@ -792,12 +802,18 @@ lasso_downsample3 <- train(
 lasso_downsample3
 #0.01571926
 
+### Predicciones modelo lasso down-sample ----
+y_hat_out_lassodown <- predict(lasso_downsample3, newdata = test_hogares, type = "raw")
+resultado_lassodown <- data.frame(id = test_hogares$id, pobre = y_hat_out_lassodown)
+
+resultado_lassodown$pobre <- ifelse(resultado_lassodown$pobre == "No", 0, 1)
+write.csv(resultado_lassodown, "../outputs/resultado_lassodown.csv", row.names = FALSE)
 
 ############################################################
-##########                Elastic net
+#                         Elastic net                   ####
 ############################################################
 
-
+## Modelo 3 EN ####
 set.seed(10101)
 
 elasticnet3 <- train(
@@ -815,8 +831,116 @@ elasticnet3 <- train(
 elasticnet3
 #lambda = 0.002504042
 
+### Predicciones modelo 3 EN ----
+y_hat_out_EN3 <- predict(elasticnet3, newdata = test_hogares, type = "raw")
+resultado_EN3 <- data.frame(id = test_hogares$id, pobre = y_hat_out_EN3)
+
+resultado_EN3$pobre <- ifelse(resultado_EN3$pobre == "No", 0, 1)
+write.csv(resultado_EN3, "../outputs/resultado_EN3.csv", row.names = FALSE)
+
+
+## Modelo 4 EN ####
+set.seed(10101)
+
+elasticnet4 <- train(
+  Pobre_dummy ~ Npersug + Lp + Tipo_vivienda + factor(Dominio) + Num_cuartos +
+    max_educ_h + P5010 + Num_personas_cuarto +
+    max_health_h + edad_prom_h + horastrab_prom_h +
+    Nper + Li,
+  data = p_train_hogares_mini,
+  method = "glmnet",
+  trControl = ctrl_def_modg,
+  family = "binomial",
+  metric = "ROC",
+  preProcess = c("center", "scale")
+)
+
+elasticnet4
+#lambda = 0.002504042
+
+### Predicciones modelo 4 EN ----
+y_hat_out_EN4 <- predict(elasticnet4, newdata = test_hogares, type = "raw")
+resultado_EN4 <- data.frame(id = test_hogares$id, pobre = y_hat_out_EN4)
+
+resultado_EN4$pobre <- ifelse(resultado_EN4$pobre == "No", 0, 1)
+write.csv(resultado_EN4, "../outputs/resultado_EN4.csv", row.names = FALSE)
+
+
+## Modelo 5 EN ####
+## En este modelo vamos a usar las bases de datos creadas a partir 
+## de la predicción de income, especificamente los resultados obtenidos con Lasso
+
+set.seed(10101)
+
+elasticnet5 <- train(
+  Pobre_dummy ~ factor(Dominio) + Num_cuartos + P5010 + Tipo_vivienda +
+    Nper + Npersug + Li + Lp + Num_personas_cuarto +
+    edad_prom_h + horastrab_prom_h + max_educ_h + max_health_h + tot_income_h,
+  data = p_train_hogares_mini,
+  method = "glmnet",
+  trControl = ctrl_def_modg,
+  family = "binomial",
+  metric = "ROC",
+  preProcess = c("center", "scale")
+)
+
+elasticnet5
+#lambda = 0.0002504042
+
+## Predicciones modelo 5 EN ----
+y_hat_out_EN5 <- predict(elasticnet5, newdata = ilasso_test_hogares, type = "raw")
+resultado_EN5 <- data.frame(id = ilasso_test_hogares$id, pobre = y_hat_out_EN5)
+
+resultado_EN5$pobre <- ifelse(resultado_EN5$pobre == "No", 0, 1)
+write.csv(resultado_EN5, "../outputs/resultado_EN5.csv", row.names = FALSE)
+
+## Modelo 6 EN ####
+
+## Estandarizar variable edad ####
+mu <- mean(p_train_hogares_mini$edad_prom_h)
+sigma <- sd(p_train_hogares_mini$edad_prom_h)
+p_train_hogares_mini$estedad_prom_h <- (p_train_hogares_mini$edad_prom_h - mu)/sigma
+test_hogares$estedad_prom_h <- (test_hogares$edad_prom_h - mu)/sigma
+
+## Estandarizar variable horas_trabajadas ####
+mu <- mean(p_train_hogares_mini$horastrab_prom_h)
+sigma <- sd(p_train_hogares_mini$horastrab_prom_h)
+p_train_hogares_mini$esthorastrab_prom_h <- (p_train_hogares_mini$horastrab_prom_h - mu)/sigma
+test_hogares$esthorastrab_prom_h <- (test_hogares$horastrab_prom_h - mu)/sigma
+
+## Crear log_income
+p_train_hogares_mini$tot_income_h <- ifelse(p_train_hogares_mini$tot_income_h == 0, 0.1, p_train_hogares_mini$tot_income_h)
+p_train_hogares_mini$log_income <- log(p_train_hogares_mini$tot_income_h)
+
+ien_test_hogares$tot_income_h <- ifelse(ien_test_hogares$tot_income_h == 0, 0.1, ien_test_hogares$tot_income_h)
+ien_test_hogares$log_income <- log(ien_test_hogares$tot_income_h)
+
+set.seed(10101)
+
+elasticnet6 <- train(
+  Pobre_dummy ~ factor(Dominio) + Num_cuartos + P5010 + Tipo_vivienda +
+    Nper + Npersug + Li + Lp + Num_personas_cuarto +
+    estedad_prom_h + esthorastrab_prom_h + max_educ_h + max_health_h,
+  data = p_train_hogares_mini,
+  method = "glmnet",
+  trControl = ctrl_def_modg,
+  family = "binomial",
+  metric = "ROC",
+  preProcess = c("center", "scale")
+)
+
+elasticnet6
+#lambda = 0.0002504042
+
+## Predicciones modelo 6 EN ----
+y_hat_out_EN6 <- predict(elasticnet6, newdata = test_hogares, type = "raw")
+resultado_EN6 <- data.frame(id = test_hogares$id, pobre = y_hat_out_EN6)
+
+resultado_EN6$pobre <- ifelse(resultado_EN6$pobre == "No", 0, 1)
+write.csv(resultado_EN6, "../outputs/resultado_EN6.csv", row.names = FALSE)
+
 ##############################################
-#########      Tablas de contingencia
+#          Tablas de contingencia      #####
 ##############################################
 
 predictors<-c("Npersug","Lp","Tipo_vivienda", "Dominio","Num_cuartos",
@@ -863,10 +987,4 @@ with(testResults,table(Pobre,lasso_roc3))
 with(testResults,table(Pobre,lasso_upsample3))
 with(testResults,table(Pobre,lasso_downsample3))
 with(testResults,table(Pobre,elasticnet3))
-
-
-
-
-
-
 
