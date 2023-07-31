@@ -1,18 +1,25 @@
-# Problem Set Template Repository for Big Data and Machine Learning for Applied Economics
+Problem set 3: Predicting Poverty
 
-This is the template repository for the problem sets.
+Integrantes:
 
-The repo should contain at least four folders:
+-- Irina Andrea Vélez López
+-- Miguel Angel Victoria Simbaqueva
+-- Lucia Fillippo
+-- Daniel Casas Bautista
 
-- `document`: contains your final document in `pdf` format. Ideally, the document should pull figures and tables directly from the `views` folder. I've included a latex template I created for the Thesis Seminar. 
-- `scripts`: contains all your scripts
-- `stores`: contains all the data sets used. If files are "too big" for GitHub, include a document describing where people can access the data.
-- `views`: contains all figures and tables
+En el presente repositorio se encuentran las siguientes carpetas con la respectiva descripción:
 
+- document: Aquí se encuentra el documento final del problem set 2, junto con el respectivo problem set y el diccionario de datos de las bases
 
-## Some general instructions 
+- scripts: Aquí se encuentran los scripts elaborados para el desarrollo del trabajo. 
+		El script "1. Loading data" contiene el cargue y limpieza de las bases de datos a utilizar
+		El script "2. Transforming data" refleja las transformaciones que se le han hecho a las bases de train y test
+		El script "3. Predicting Income" contiene el código utilizado para predecir la variable de ingreso
+		El script "4. Descriptive Analysis" contiene el análisis descriptivo de las variables utilizadas
+		El script "5. Classification_I" contiene el ejercicio de clasificación de la pobreza utilizando diferentes modelos y especificaciones
+		El script "6. Classification_2" contiene el ejercicio de clasificación del ingreso utilizando diferentes modelos y especificaciones
 
-Instructions
+- outputs: Contiene los archivos .csv con los resultados de las predicciones, los cuales fueron cargados a Kaggle
 
-The database used for the entire workshop is available in the stores folder of the repository and is called data.Rdata.
+- stores: Aquí se encuentran las bases de datos utilizadas y creadas en el desarrollo del trabajo.
 
