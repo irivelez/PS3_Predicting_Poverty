@@ -16,7 +16,7 @@ En el presente repositorio se encuentran las siguientes carpetas con la respecti
 		El script "2. Transforming data" refleja las transformaciones que se le han hecho a las bases de train y test
 		El script "3. Predicting Income" contiene el código utilizado para predecir la variable de ingreso
 		El script "4. Descriptive Analysis" contiene el análisis descriptivo de las variables utilizadas
-		El script "5. Classification_I" contiene el ejercicio de clasificación de la pobreza utilizando diferentes modelos y especificaciones
+		El script "5. Classification_1" contiene el ejercicio de clasificación de la pobreza utilizando diferentes modelos y especificaciones
 		El script "6. Classification_2" contiene el ejercicio de clasificación del ingreso utilizando diferentes modelos y especificaciones
 
 - outputs: Contiene los archivos .csv con los resultados de las predicciones, los cuales fueron cargados a Kaggle
