@@ -342,6 +342,14 @@ ilasso_test_hogares <- left_join(test_hogares, predict_lasso)
 iridge_test_hogares <- left_join(test_hogares, predict_ridge)
 i_train_hogares <- subset(p_train_hogares,select = -log_income)
 
+# Best lambda of each model
+list_lambda <- list(mejor_lambda_EN, mejor_lambda_EN2, 
+                    mejor_lambda_lasso, mejor_lambda_lasso2, 
+                    mejor_lambda_ridge, mejor_lambda_ridge2)
+
+merged_lambda <- do.call(rbind, list_lambda)
+merged_lambda
+
 # Saving DBs
 saveRDS(ien_test_hogares, "../stores/ien_test_hogares.rds") 
 saveRDS(ilasso_test_hogares, "../stores/ilasso_test_hogares.rds") 
